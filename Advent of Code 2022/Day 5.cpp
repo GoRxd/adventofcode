@@ -65,7 +65,7 @@ std::string returnPartOfString(std::string s, int start)
 	return part;
 }
 
-void doCommands(std::vector<std::string>& stacks, std::vector<std::string> commands)
+void doCommandsPart1(std::vector<std::string>& stacks, std::vector<std::string> commands)
 {
 	for (auto& command : commands)
 	{
@@ -81,6 +81,34 @@ void doCommands(std::vector<std::string>& stacks, std::vector<std::string> comma
 		for (int i = 0; i < quantity; i++)
 			stacks[in].insert(0, 1, stacks[out][i]);
 
+		stacks[out] = returnPartOfString(stacks[out], quantity);
+	}
+}
+
+void doCommandsPart2(std::vector<std::string>& stacks, std::vector<std::string> commands)
+{
+	for (auto& command : commands)
+	{
+		std::vector<int> parameters = returnDigitsFromString(command);
+
+		int quantity = parameters[0];
+		int out = parameters[1] - 1;
+		int in = parameters[2] - 1;
+		int stop = (stacks[out].size() - quantity > 0) ? stacks[out].size() - quantity : 0;
+
+		if (out >= stacks.size() || in >= stacks.size())
+			continue;
+		if (quantity == 1)
+		{
+			for (int i = 0; i < quantity; i++)
+				stacks[in].insert(0, 1, stacks[out][i]);
+		}
+		else
+		{
+			for (int i = quantity - 1; i >= 0; i--) {
+				stacks[in].insert(0, 1, stacks[out][i]);
+			}
+		}
 		stacks[out] = returnPartOfString(stacks[out], quantity);
 	}
 }
@@ -134,7 +162,8 @@ int main()
 
 	std::vector<std::string> stacks = splitToStacks(crates);
 
-	doCommands(stacks, commands);
+	//doCommandsPart1(stacks, commands);
+	doCommandsPart2(stacks, commands);
 
 	std::cout << combineTops(stacks) << std::endl;
 }
